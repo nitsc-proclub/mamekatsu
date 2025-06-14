@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>マメカツ！ | エダマメ活動</title>
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
+
+    <!-- Open Graph Tags for Facebook and other platforms -->
+    <meta property="og:title" content="マメカツ！ | エダマメ活動" />
+    <meta property="og:description" content="環境問題について楽しく学んで、行動が「芽生える」ゲーム！ずんだもんと一緒に、「マメな活動＝マメカツ！」を始めてみよう！" />
+    <meta property="og:image" content="https://github.com/nitsc-proclub/Hajimete-KOSEN/raw/c772d1b6d81e2e0ef84bce10e94d3a8c38849255/title.png" />
+    <meta property="og:url" content="https://hajimete-kosen.netlify.app/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="マメカツ！ | エダマメ活動" />
+    <meta name="twitter:description" content="環境問題について楽しく学んで、行動が「芽生える」ゲーム！ずんだもんと一緒に、「マメな活動＝マメカツ！」を始めてみよう！。" />
+    <meta name="twitter:image" content="https://github.com/nitsc-proclub/Hajimete-KOSEN/raw/c772d1b6d81e2e0ef84bce10e94d3a8c38849255/title.png" />
+    <meta name="twitter:url" content="https://hajimete-kosen.netlify.app/" />
+
+    <!-- Google Fonts（丸ゴシック × 英字） -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ======================================
+           0. Design Tokens
+        ====================================== */
+        :root {
+            --edamame-50: #f1fdf0;
+            --edamame-100: #d2f9d1;
+            --edamame-300: #98e6a0;
+            --edamame-500: #53cc63;
+            --edamame-700: #2c9a3b;
+            --zunda-yellow: #ffd95e;
+            --bg: #fafdf8;
+            --txt: #264020;
+            --radius: 1.25rem;
+            --shadow: 0 8px 24px rgba(0,0,0,.08);
+            --section: clamp(4rem,9vw,7rem);
+            --ff-jp: 'M PLUS Rounded 1c','Hiragino Sans',Meiryo,sans-serif;
+            --ff-en: 'Nunito',system-ui,sans-serif;
+        }
+
+        @media(prefers-color-scheme:dark) {
+            :root {
+                --bg: #111d13;
+                --txt: #eafbed;
+                --edamame-50: #142415;
+            }
+        }
+
+        /* ======================================
+           1. Reset & Base (+ font-size)
+        ====================================== */
+        *, ::before, ::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth;
+            line-height: 1.7;
+            font-size: 18px; /* 16px × 1.3 */
+            overflow-anchor: none;
+        }
+
+        body {
+            font-family: var(--ff-jp);
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+        }
+
+        .lock-scroll {
+            overflow: hidden;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+        }
+
+        /* 追加：ロード中スクロール禁止 */
+
+        img, svg, video {
+            display: block;
+            max-width: 100%;
+            height: auto
+        }
+
+        ul {
+            list-style: none
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .fade {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: .7s cubic-bezier(.33,.99,.46,1.2);
+            will-change: opacity,transform
+        }
+
+            .fade.is-visible {
+                opacity: 1;
+                transform: none
+            }
+
+        h2 {
+            font: 800 clamp(2rem,3vw+1rem,2.7rem)/1.3 var(--ff-en);
+            text-align: center;
+            color: var(--edamame-700);
+            margin-bottom: 2.6rem;
+            position: relative;
+        }
+
+            h2::after {
+                content: '';
+                width: 4.8rem;
+                height: 6px;
+                border-radius: 9999px;
+                background: linear-gradient(90deg,var(--zunda-yellow),var(--edamame-500));
+                display: block;
+                margin: .85rem auto 0;
+            }
+
+        /* ======================================
+           2. Page-loader overlay
+        ====================================== */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .loader-pane {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: var(--edamame-500);
+            transition: transform .9s cubic-bezier(.83,0,.17,1);
+        }
+
+            .loader-pane.top {
+                top: 0;
+                transform: translateY(0)
+            }
+
+            .loader-pane.bottom {
+                bottom: 0;
+                transform: translateY(0)
+            }
+
+        body.loaded .loader-pane.top {
+            transform: translateY(-100%)
+        }
+
+        body.loaded .loader-pane.bottom {
+            transform: translateY(100%)
+        }
+
+        /* ======================================
+           3. Navigation
+        ====================================== */
+        .nav {
+            position: fixed;
+            inset: 0 0 auto;
+            z-index: 60;
+            height: 4.5rem;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .4s
+        }
+
+        .nav__list {
+            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,.55);
+            border: 1px solid rgba(255,255,255,.3);
+            border-radius: 9999px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+            display: flex;
+            gap: 2rem;
+            padding: .6rem 2rem;
+            opacity: 0;
+            transition: .4s
+        }
+
+        .nav:hover .nav__list {
+            opacity: 1;
+            pointer-events: auto
+        }
+
+        .nav__link {
+            font: 700 .95rem var(--ff-en)
+        }
+
+        body.scrolled .nav {
+            backdrop-filter: blur(6px);
+            background: rgba(250,253,248,.85);
+            box-shadow: 0 2px 6px rgba(0,0,0,.05)
+        }
+
+        body.scrolled .nav__list {
+            opacity: 1;
+            background: transparent;
+            border: none
+        }
+
+        /* ======================================
+           4. Hero
+        ====================================== */
+        .hero {
+            min-height: 95svh;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: radial-gradient(ellipse 60% 60% at 50% 40%,var(--edamame-50) 0%,var(--bg) 75%);
+            overflow: hidden;
+            position: relative;
+            isolation: isolate;
+            overflow-anchor: none;
+        }
+
+        .hero__bg-deco {
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="%2398e6a0" fill-opacity="0.05"><path d="M80 10c19 0 51 14 51 46 0 22-16 42-51 42S29 78 29 56 61 10 80 10Z"/></svg>') repeat;
+            animation: move 50s linear infinite;
+            z-index: -2
+        }
+
+        @keyframes move {
+            to {
+                background-position: 1600px 0
+            }
+        }
+
+        .hero__logo {
+            width: min(100%,640px);
+            margin: auto;
+            opacity: 0;
+            transform: scale(.6);
+        }
+
+        .logo-in {
+            animation: pop .9s cubic-bezier(.33,1.6,.6,1) both
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(.6);
+                opacity: 0
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        .hero__subtitle {
+            margin-top: 1.3rem;
+            font-size: clamp(1.2rem,2.4vw,1.6rem);
+            font-weight: 700;
+            color: var(--edamame-700)
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 2.7rem;
+            padding: 1.1rem 3rem;
+            background: var(--edamame-500);
+            color: #fff;
+            font: 800 1.05rem var(--ff-en);
+            border-radius: 9999px;
+            box-shadow: var(--shadow);
+            transition: .25s
+        }
+
+            .btn:hover {
+                transform: translateY(-3px);
+                background: var(--edamame-700)
+            }
+
+        /* ======================================
+           5. Section wrapper
+        ====================================== */
+        .section {
+            padding: var(--section) 1.5rem;
+            overflow-anchor: none
+        }
+
+        .inner {
+            max-width: 1100px;
+            margin: auto
+        }
+
+        /* ======================================
+           6. PV (iframe)
+        ====================================== */
+        .pv-wrapper {
+            aspect-ratio: 16/9;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow)
+        }
+
+            .pv-wrapper iframe {
+                width: 100%;
+                height: 100%;
+                border: 0
+            }
+
+        /* ======================================
+           7. NEWS & Twitter
+        ====================================== */
+        .news-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit,minmax(320px,1fr))
+        }
+
+        .news-card {
+            background: #fff;
+            border-left: 10px solid var(--edamame-500);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+            .news-card:hover {
+                transform: translateY(-8px)
+            }
+
+        .news-date {
+            font-size: .9rem;
+            font-weight: 700;
+            color: var(--edamame-700)
+        }
+
+        .news-ttl {
+            margin-top: .35rem;
+            font-weight: 700;
+            font-size: 1.1rem
+        }
+
+        .twitter-box {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: .6rem;
+            min-height: 450px
+        }
+
+        /* ======================================
+           8. Character Grid
+        ====================================== */
+        .char-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            justify-content: center
+        }
+
+        .char-card {
+            width: 260px;
+            background: #fff;
+            text-align: center;
+            padding: 2.2rem 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+            .char-card:hover {
+                transform: translateY(-10px)
+            }
+
+        .char-img {
+            width: 170px;
+            height: 170px;
+            margin: auto;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--edamame-100)
+        }
+
+        .char-name {
+            color: var(--edamame-700);
+            font: 800 1.4rem/1 var(--ff-en);
+            margin: .7rem 0 .3rem
+        }
+
+        .char-desc {
+            font-size: 1rem;
+            line-height: 1.8
+        }
+
+        /* ======================================
+           9. Staff Table
+        ====================================== */
+        .staff-table {
+            width: 100%;
+            max-width: 880px;
+            margin: auto;
+            background: #fff;
+            border-collapse: collapse;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            font-size: 1.05rem
+        }
+
+            .staff-table th, .staff-table td {
+                padding: 1.4rem
+            }
+
+            .staff-table th {
+                width: 35%;
+                font-weight: 800;
+                color: var(--edamame-700);
+                text-align: left
+            }
+
+            .staff-table tr:not(:last-child) * {
+                border-bottom: 1px solid #e6e6e6
+            }
+
+        /* ======================================
+           10. Footer
+        ====================================== */
+        footer {
+            background: var(--edamame-700);
+            color: #fff;
+            text-align: center;
+            padding: 4rem 1.5rem;
+            margin-top: var(--section)
+        }
+
+        .sns-links {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-bottom: 2rem
+        }
+
+            .sns-links span {
+                font: 700 1.15rem var(--ff-en)
+            }
+
+        footer small {
+            font-size: .85rem;
+            opacity: .8
+        }
+    </style>
+</head>
+
+<body class="lock-scroll">
+
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-pane top"></div>
+        <div class="loader-pane bottom"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" aria-label="Site">
+        <ul class="nav__list">
+            <li><a href="#story" class="nav__link">STORY</a></li>
+            <li><a href="#pv" class="nav__link">MOVIE</a></li>
+            <li><a href="#news" class="nav__link">NEWS</a></li>
+            <li><a href="#char" class="nav__link">CHARACTER</a></li>
+            <li><a href="#staff" class="nav__link">STAFF</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero__bg-deco"></div>
+        <img src="images/logo.png" alt="マメカツ！ ロゴ" class="hero__logo">
+        <p class="hero__subtitle">明日に向けて Let’s マメカツ！🌱</p>
+        <a href="#pv" class="btn">PV を見る</a>
+    </header>
+
+    <!-- Story -->
+    <section id="story" class="section">
+        <div class="inner">
+            <h2>「マメカツ！」とは？</h2>
+            <p style="max-width:800px;margin:auto;font-size:1.15rem;line-height:1.95;text-align:center">
+                環境問題について楽しく学んで、
+                行動が「芽生える」ゲーム！<br>
+                ずんだもんと一緒に、「マメな活動＝マメカツ！」を始めてみよう！
+            </p>
+        </div>
+    </section>
+
+    <!-- PV -->
+    <section id="pv" class="section" style="background:var(--edamame-50)">
+        <div class="inner">
+            <h2>MOVIE</h2>
+            <div class="pv-wrapper">
+                <iframe src="https://www.youtube.com/embed/9LyTruOBirg"
+                        title="紹介PV"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Twitter -->
+    <section id="news" class="section">
+        <div class="inner">
+            <h2>NEWS &amp; SNS</h2>
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-date">2025/06/14</div>
+                    <div class="news-ttl">サイトを公開しました！</div>
+                </article>
+                <div class="twitter-box">
+                    <blockquote class="twitter-tweet" data-media-max-width="560">
+                        <p lang="ja" dir="ltr">
+                            今日も一日 <a href="https://twitter.com/hashtag/%E4%BB%99%E5%8F%B0%E9%AB%98%E5%B0%82?src=hash&amp;ref_src=twsrc%5Etfw">#仙台高専</a>
+                            <a href="https://t.co/Kha4pewSfs">pic.twitter.com/Kha4pewSfs</a>
+                        </p>&mdash; 仙台高専プログラミング部 (@SNCT_proclub)
+                        <a href="https://twitter.com/SNCT_proclub/status/1648973170677026817?ref_src=twsrc%5Etfw">April 20, 2023</a>
+                    </blockquote>
+                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Character -->
+    <section id="char" class="section" style="background:var(--edamame-50)">
+        <div class="inner">
+            <h2>CHARACTER</h2>
+            <div class="char-grid">
+                <article class="char-card">
+                    <img class="char-img" src="images/zundamon.png" alt="ずんだもん">
+                    <h3 class="char-name">ずんだもん</h3>
+                    <p class="char-desc">ずんだの妖精<br>語尾は「〇〇なのだ」</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Staff & Cast -->
+    <section id="staff" class="section">
+        <div class="inner">
+            <h2>STAFF &amp; CAST</h2>
+            <table class="staff-table">
+                <tr><th>企画・制作</th><td>仙台高等専門学校プログラミング部</td></tr>
+                <tr><th>キャラクター</th><td>東北ずん子・ずんだもんプロジェクト</td></tr>
+                <tr><th>声の出演</th><td>VOICEVOX ずんだもん</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="sns-links">
+            <span>Twitter（準備中）</span>
+            <span>YouTube（準備中）</span>
+            <span>Instagram（準備中）</span>
+        </div>
+        <small>マメカツ！プロジェクト</small>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        /* 0) URL に付いた #pv などを消す */
+        history.replaceState(null, '', location.pathname);
+
+        /* ===== 位置復元を無効化 ===== */
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+        /* ===== ページロード処理 ===== */
+        window.addEventListener('DOMContentLoaded', () => {
+
+            /* ① 強制的に最上部へ */
+            window.scrollTo(0, 0);
+
+            /* ② “閉じた緑パネル” を 1 フレーム描画させる */
+            requestAnimationFrame(() => {
+
+                /* ③ 次フレームで .loaded を付与 → パネル開く */
+                requestAnimationFrame(() => {
+                    document.body.classList.add('loaded');
+
+                    const loader = document.getElementById('page-loader');
+                    const heroLogo = document.querySelector('.hero__logo');
+
+                    /* 開き終わったらロゴを表示・ロック解除 */
+                    loader.addEventListener('transitionend', () => {
+                        heroLogo.classList.add('logo-in');        // ロゴ Pop
+                        loader.remove();                          // パネル削除
+                        document.body.classList.remove('lock-scroll');
+                    });
+                });
+
+            });
+        });
+    </script>
+</body>
+</html>
