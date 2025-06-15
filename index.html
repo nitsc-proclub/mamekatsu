@@ -474,6 +474,35 @@
             font-size: .85rem;
             opacity: .8
         }
+
+        /* デフォルトはPC表示 */
+        .br-sp {
+            display: none;
+        }
+
+        .br-pc {
+            display: inline;
+        }
+
+        /* 767px以下＝スマホのとき */
+        @media (max-width: 767px) {
+            .br-sp {
+                display: inline;
+            }
+
+            .br-pc {
+                display: none;
+            }
+        }
+
+        /* 任意でクラスにした lead-text のスタイル */
+        .lead-text {
+            max-width: 800px;
+            margin: auto;
+            font-size: 1.15rem;
+            line-height: 1.95;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -509,9 +538,10 @@
         <div class="inner">
             <h2>「マメカツ！」とは？</h2>
             <p style="max-width:800px;margin:auto;font-size:1.15rem;line-height:1.95;text-align:center">
-                環境問題について楽しく学んで、
+                環境問題について楽しく学んで<span class="br-sp"><br></span><span class="br-pc">、</span>
                 行動が「芽生える」ゲーム！<br>
-                ずんだもんと一緒に、「マメな活動＝マメカツ！」を始めてみよう！
+                ずんだもんと一緒に<span class="br-sp"><br></span><span class="br-pc">、</span>
+                「マメな活動＝マメカツ！」を始めてみよう！
             </p>
         </div>
     </section>
