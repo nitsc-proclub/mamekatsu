@@ -332,12 +332,12 @@
             }
 
         /* ======================================
-           7. NEWS & Twitter
-        ====================================== */
+   7. NEWS & Twitter
+====================================== */
         .news-grid {
             display: grid;
             gap: 2rem;
-            grid-template-columns: repeat(auto-fit,minmax(320px,1fr))
+            grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
         }
 
         .news-card {
@@ -346,23 +346,24 @@
             padding: 2rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            transition: .3s
+            transition: .3s;
         }
 
             .news-card:hover {
-                transform: translateY(-8px)
+                transform: translateY(-8px);
             }
 
         .news-date {
             font-size: .9rem;
             font-weight: 700;
-            color: var(--edamame-700)
+            color: var(--edamame-700);
+            margin-bottom: 0.1rem; /* 行間を詰める */
         }
 
         .news-ttl {
-            margin-top: .35rem;
+            margin-top: 0; /* 行間を詰める */
             font-weight: 700;
-            font-size: 1.1rem
+            font-size: 1.1rem;
         }
 
         .twitter-box {
@@ -370,8 +371,9 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: .6rem;
-            min-height: 450px
+            min-height: 450px;
         }
+
 
         /* ======================================
            8. Character Grid
@@ -533,6 +535,8 @@
             <h2>NEWS &amp; SNS</h2>
             <div class="news-grid">
                 <article class="news-card">
+                    <div class="news-date">2025/06/15</div>
+                    <div class="news-ttl">PV第一弾を公開しました！</div>
                     <div class="news-date">2025/06/14</div>
                     <div class="news-ttl">サイトを公開しました！</div>
                 </article>
