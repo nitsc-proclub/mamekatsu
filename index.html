@@ -26,17 +26,28 @@
 
     <style>
         /* ======================================
-           0. Design Tokens
+        0. Design Tokens
         ====================================== */
         :root {
+            /* ── Light Mode (default) ─────────── */
+            --bg: #fafdf8;
+            --surface-1: #ffffff;
+            --surface-2: #f1fdf0;
+            --txt: #264020;
+            --txt-muted: #598560;
+            /* Edamame palette */
             --edamame-50: #f1fdf0;
             --edamame-100: #d2f9d1;
             --edamame-300: #98e6a0;
             --edamame-500: #53cc63;
             --edamame-700: #2c9a3b;
+            /* Accents */
             --zunda-yellow: #ffd95e;
-            --bg: #fafdf8;
-            --txt: #264020;
+            --sora-blue: #6ac7ff;
+            /* Footer */
+            --footer-bg: var(--edamame-700); /* 鮮やかなグリーン */
+            --footer-txt: #ffffff;
+            /* Other tokens */
             --radius: 1.25rem;
             --shadow: 0 8px 24px rgba(0,0,0,.08);
             --section: clamp(4rem,9vw,7rem);
@@ -44,13 +55,29 @@
             --ff-en: 'Nunito',system-ui,sans-serif;
         }
 
-        @media(prefers-color-scheme:dark) {
+        /* ── Dark Mode ─────────────────────── */
+        @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #111d13;
-                --txt: #eafbed;
-                --edamame-50: #142415;
+                --bg: #08130d;
+                --surface-1: #0d1d15;
+                --surface-2: #123322;
+                --txt: #e7ffee;
+                --txt-muted: #96bfa5;
+                --edamame-50: #123322;
+                --edamame-100: #18452a;
+                --edamame-300: #2c6b3c;
+                --edamame-500: #4fd36b; /* 彩度そのまま明度-15% */
+                --edamame-700: #5ff081; /* ロゴのライトグリーン寄せ */
+
+                --zunda-yellow: #ffdf6a;
+                --sora-blue: #49b5ff;
+                --footer-bg: #18452a; /* 深いグリーンで視認性UP */
+                --footer-txt: #e7ffee;
+                --shadow: 0 8px 24px rgba(0,0,0,.55);
             }
         }
+
+
 
         /* ======================================
            1. Reset & Base (+ font-size)
@@ -61,7 +88,7 @@
             padding: 0
         }
 
-        /* ❶ まず PC 用をデフォルトに（18px） */
+        /* ❶ まず PC 用をデフォルトに（20px） */
         html {
             scroll-behavior: smooth;
             line-height: 1.7;
@@ -74,7 +101,7 @@
             html {
                 scroll-behavior: smooth;
                 line-height: 1.7;
-                font-size: 14px; /* スマホ：小さめのベース文字サイズ */
+                font-size: 12px; /* スマホ：小さめのベース文字サイズ */
                 overflow-anchor: none;
             }
         }
@@ -452,27 +479,29 @@
            10. Footer
         ====================================== */
         footer {
-            background: var(--edamame-700);
-            color: #fff;
+            background: var(--footer-bg); /* ライト＝#2c9a3b / ダーク＝#18452a */
+            color: var(--footer-txt); /* ライト＝#ffffff / ダーク＝#e7ffee */
             text-align: center;
             padding: 4rem 1.5rem;
-            margin-top: var(--section)
+            margin-top: var(--section);
         }
 
         .sns-links {
             display: flex;
             justify-content: center;
             gap: 2.5rem;
-            margin-bottom: 2rem
+            margin-bottom: 2rem;
         }
 
-            .sns-links span {
-                font: 700 1.15rem var(--ff-en)
-            }
+        .sns-links span,
+        .sns-links a {
+            font: 700 1.15rem var(--ff-en);
+            color: var(--footer-txt); /* ダークでも読みやすく */
+        }
 
         footer small {
             font-size: .85rem;
-            opacity: .8
+            opacity: .85;
         }
 
         /* デフォルトはPC表示 */
@@ -541,7 +570,7 @@
                 環境問題について楽しく学んで<span class="br-sp"><br></span><span class="br-pc">、</span>
                 行動が「芽生える」ゲーム！<br>
                 ずんだもんと一緒に<span class="br-sp"><br></span><span class="br-pc">、</span>
-                「マメな活動＝マメカツ！」を始めてみよう！
+                「マメな活動＝マメカツ！」を始めよう！
             </p>
         </div>
     </section>
